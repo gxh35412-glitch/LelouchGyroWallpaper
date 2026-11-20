@@ -27,13 +27,17 @@ import com.google.android.filament.gltfio.AssetLoader;
 import com.google.android.filament.gltfio.FilamentAsset;
 import com.google.android.filament.gltfio.ResourceLoader;
 import com.google.android.filament.gltfio.UbershaderProvider;
-import com.google.android.filament.utils.UiHelper;
+import com.google.android.filament.android.UiHelper;
 
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 public class GyroWallpaperService extends WallpaperService {
+
+    static {
+        com.google.android.filament.Filament.init();
+    }
     @Override public WallpaperService.Engine onCreateEngine() { return new WallpaperEngine(); }
 
     private class WallpaperEngine extends WallpaperService.Engine implements SensorEventListener,
@@ -73,7 +77,10 @@ public class GyroWallpaperService extends WallpaperService {
                 view.setBlendMode(View.BlendMode.OPAQUE);
                 view.setPostProcessingEnabled(true);
                 view.setAntiAliasing(View.AntiAliasing.FXAA);
-                view.setClearOptions(new View.ClearOptions());
+               Renderer.ClearOptions clearOptions = new Renderer.ClearOptions();
+clearOptions.clear = true;
+clearOptions.clearColor = new float[]{0f, 0f, 0f, 1f};
+renderer.setClearOptions(clearOptions);
                 cameraEntity = EntityManager.get().create();
                 camera = filament.createCamera(cameraEntity);
                 view.setCamera(camera);
